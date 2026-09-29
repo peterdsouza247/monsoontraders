@@ -1,0 +1,26 @@
+(function(){
+  'use strict';
+  const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function create(id){
+    const key='way-games:'+id+':v1';
+    let data;
+    try{data=JSON.parse(localStorage.getItem(key))}catch{}
+    if(!data||!Array.isArray(data.profiles))data={profiles:[{id:'p-default',name:'Player',records:[]}],active:'p-default'};
+    const save=()=>{try{localStorage.setItem(key,JSON.stringify(data));return true}catch{return false}};
+    const uid=()=>('p-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8));
+    const profiles=()=>data.profiles;
+    const active=()=>data.profiles.find(p=>p.id===data.active)||data.profiles[0];
+    function add(name){name=String(name||'').trim().slice(0,24);if(!name)throw Error('Enter a profile name.');if(data.profiles.length>=12)throw Error('Keep at most 12 profiles.');const p={id:uid(),name,records:[]};data.profiles.push(p);data.active=p.id;save();return p}
+    function rename(pid,name){const p=data.profiles.find(x=>x.id===pid);name=String(name||'').trim().slice(0,24);if(p&&name){p.name=name;save()}}
+    function select(pid){if(data.profiles.some(p=>p.id===pid)){data.active=pid;save()}}
+    function record(players,winner,mode,log,meta){const at=new Date().toISOString();for(const pid of [...new Set(players.filter(Boolean))]){const p=data.profiles.find(x=>x.id===pid);if(!p)continue;p.records.unshift({at,opponent:players.filter(x=>x!==pid).map(x=>data.profiles.find(y=>y.id===x)?.name||'Computer').join(' & ')||'Computer',result:winner===null?'Draw':pid===winner?'Win':'Loss',mode,log:log.slice(-100),meta});p.records=p.records.slice(0,30)}save()}
+    function exportData(){const blob=new Blob([JSON.stringify({game:id,version:1,profiles:data.profiles,active:data.active},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=id+'-profiles.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000)}
+    async function importData(file){if(!file||file.size>1e6)throw Error('Choose a profile export under 1 MB.');let obj;try{obj=JSON.parse(await file.text())}catch{throw Error('That file is not valid JSON.')}if(obj.game!==id||obj.version!==1||!Array.isArray(obj.profiles))throw Error('This export belongs to another game or version.');const incoming=obj.profiles.slice(0,12).filter(p=>typeof p.name==='string'&&Array.isArray(p.records)).map(p=>({id:uid(),name:p.name.trim().slice(0,24)||'Player',records:p.records.slice(0,30).map(r=>({at:String(r.at||''),opponent:String(r.opponent||''),result:r.result==='Win'?'Win':'Loss',mode:String(r.mode||''),log:Array.isArray(r.log)?r.log.slice(-100).map(String):[],meta:String(r.meta||'')}))}));if(!incoming.length)throw Error('No valid profiles found.');data.profiles=incoming;data.active=incoming[0].id;save();return incoming.length}
+    return{profiles,active,add,rename,select,record,exportData,importData};
+  }
+  function profilesHTML(store){const p=store.active();return `<div class="panel"><h2>Profiles</h2><p class="muted small">Profiles and match records are saved in this browser. Export a backup before clearing browser data.</p><div class="formline"><label>Active profile<select id="profile-select">${store.profiles().map(x=>`<option value="${esc(x.id)}" ${x.id===p.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select></label><label>New profile<input id="profile-name" maxlength="24" placeholder="Name"></label><button id="profile-add">Create</button></div><div class="button-row"><button id="profile-export">Export profiles</button><label class="small">Import profiles (replaces current data)<br><input id="profile-import" type="file" accept="application/json,.json"></label></div><p class="muted small" id="profile-message" role="status"></p></div>`}
+  function wireProfiles(store,rerender){const $=id=>document.getElementById(id);$('profile-select').onchange=e=>{store.select(e.target.value);rerender()};$('profile-add').onclick=()=>{try{store.add($('profile-name').value);rerender()}catch(e){$('profile-message').textContent=e.message}};$('profile-export').onclick=()=>store.exportData();$('profile-import').onchange=async e=>{try{const n=await store.importData(e.target.files[0]);rerender();alert(`Imported ${n} profiles.`)}catch(err){$('profile-message').textContent=err.message}}}
+  function recordsHTML(store){const rs=store.active().records;return `<div class="panel"><h2>Fight record</h2>${rs.length?rs.map(r=>`<details class="record"><summary>${esc(r.result)} against ${esc(r.opponent)} · ${esc(r.mode)} · ${esc(r.at.slice(0,10))}</summary><p class="muted small">${esc(r.meta)}</p><ol>${r.log.map(line=>`<li>${esc(line)}</li>`).join('')}</ol></details>`).join(''):'<p class="muted">No matches recorded yet.</p>'}</div>`}
+  function handoff(name,subtitle,onReady){const o=document.createElement('div');o.className='overlay';o.innerHTML=`<div class="panel"><p class="eyebrow">Pass the device</p><h2>${esc(name)}'s turn</h2><p>${esc(subtitle)}</p><button class="primary" id="handoff-ready">I am ready</button></div>`;document.body.append(o);o.querySelector('button').onclick=()=>{o.remove();onReady()}}
+  window.GameKit={esc,create,profilesHTML,wireProfiles,recordsHTML,handoff};
+})();
