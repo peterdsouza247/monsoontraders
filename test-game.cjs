@@ -1,5 +1,5 @@
 const fs=require('fs'),vm=require('vm');
-const source=fs.readFileSync('game.js','utf8').replace(/menu\(\);\s*\}\)\(\);\s*$/,`globalThis.test={step,legal,boardHTML,animateVoyage,PORTS,applyOrder,newMatch,mapArt,set:(s)=>{match=s;screen='play'},token:(n)=>{animationToken=n}};})();`);
+const source=fs.readFileSync('game.js','utf8').replace(/menu\(\);\s*\}\)\(\);\s*$/,`globalThis.test={step,legal,boardHTML,animateVoyage,PORTS,ORDERS,applyOrder,newMatch,mapArt,set:(s)=>{match=s;screen='play'},token:(n)=>{animationToken=n}};})();`);
 const counts=Array.from({length:12},()=>({textContent:''})),scores=Array.from({length:2},()=>({textContent:''}));
 const ship={hidden:true,style:{}},status={innerHTML:''},app={innerHTML:''};
 const document={getElementById:id=>({app, 'voyage-ship':ship,'voyage-status':status}[id]||{}),querySelector:q=>{let m=q.match(/data-port="(\d+)"/);if(m)return counts[+m[1]];m=q.match(/data-harbor="(\d+)"/);return m?scores[+m[1]]:null},querySelectorAll:()=>[]};
@@ -11,6 +11,7 @@ let wind=base();for(let k=0;k<4;k++)wind=t.step(wind,wind.turn,t.legal(wind,wind
 let blocked=base();blocked=t.applyOrder(blocked,0,0,7);if(t.legal(blocked,1).includes(7))throw Error('Blockade did not prevent rival launch');blocked.turn=1;blocked=t.step(blocked,1,6);if(blocked.blockades[1]!==null)throw Error('Blockade did not expire');
 let stranded=base();stranded.blockades[0]=0;stranded.pits.fill(0);stranded.pits[0]=4;if(t.legal(stranded,0)[0]!==0)throw Error('Blockade stranded a fleet');
 let altered=base();altered.hands[0]=['tailwind'];altered=t.applyOrder(altered,0,0,-1);const voyage=t.step(altered,0,2);if(voyage.voyage.wind!==-1||voyage.wind!==1||voyage.tailwind[0])throw Error('Tailwind changed global forecast');
+if(t.ORDERS.tailwind.name!=='Invoke Garuda'||t.ORDERS.guard.name!=="Naga's ward"||!altered.log.some(x=>x.includes('Invoke Garuda')))throw Error('Mythic orders are not visible in game text');
 let guarded=base();guarded.hands[1]=['guard'];guarded.turn=1;guarded=t.applyOrder(guarded,1,0,9);guarded.turn=0;guarded.pits.fill(0);guarded.pits[1]=1;guarded.pits[9]=3;guarded=t.step(guarded,0,1);if(!guarded.voyage.guarded||guarded.pits[9]!==3||guarded.guards[1]!==null)throw Error('Guard did not absorb capture');
 let caravan=base();caravan.hands[0]=['cargo'];caravan=t.applyOrder(caravan,0,0,2);if(caravan.pits[2]!==6||caravan.influence[0]!==0||!caravan.used)throw Error('Spice caravan or order cost failed');
 let draw=base();draw.voyages[0]=2;draw=t.step(draw,0,0);if(draw.hands[0].length!==3)throw Error('Third voyage did not draw a card');
