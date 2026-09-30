@@ -17,11 +17,15 @@ Banking a crate grants one influence, up to six. Each fleet begins with two orde
 | Order | Cost | Effect |
 | --- | ---: | --- |
 | Mercenary blockade | 2 | A selected rival port cannot launch on its owner's next voyage. Cargo can still pass through. If it is their only occupied port, they can launch from it so play cannot stall. |
-| Tailwind | 1 | Reverse the direction for your next voyage only. The global wind schedule is unchanged. |
-| Harbor guard | 1 | Shield a selected occupied port from the next attempted capture; then the guard is spent. |
+| Invoke Garuda | 1 | Call on Garuda to reverse your sailing direction for one voyage only. The global wind schedule is unchanged. |
+| Naga's ward | 1 | A serpent spirit shields a selected occupied port from the next attempted capture; then the ward is spent. |
 | Spice caravan | 2 | Add two crates to a selected owned port. |
 
 These orders make short-term choices matter without adding a technology tree or more phases. Contract and market markers remain visible on the chart; no information is hidden from the other player.
+
+## Mythic setting
+
+Garuda and naga appear in traditions across South and Southeast Asia. The fictional coast draws on their imagery as a bird in the sky and a serpent associated with water. The wind-changing and capture-guarding powers are invented game mechanics, not claims about a particular tradition. The characters and art are original rather than reproductions of sacred or historic works. Background: [British Museum on Garuda in Thailand](https://www.britishmuseum.org/collection/object/A_1954-0715-21) and [Smithsonian National Museum of Asian Art on naga in Southeast Asia](https://asia.si.edu/explore-art-culture/collections/collections-areas/southeast-asian/sacred-sites-in-southeast-asia/naga-bridge-spean-ta-ong/).
 
 ## Saves and scope
 
