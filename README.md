@@ -8,7 +8,19 @@ Open `index.html` in a browser, or upload the ZIP as an HTML5 game to itch.io wi
 
 For local two-player, create two profiles first. The game announces each merchant's turn before handing off the device. There is no hidden information in this game.
 
-The game board is a fictional coast chart. Its translucent coastline and islands vary by match seed, while the twelve numbered ports and their route stay fixed. Amber ships mark ports 1–6 and teal ships mark ports 7–12. Tap a glowing port to launch its cargo. A coloured ship then visits each stop in wind order as the port counts change. Dotted flow lines show the current wind direction, and BANK markers show where each merchant scores while that wind blows. The wind reverses every four voyages, so the harbor entry moves to the other end of each merchant's shore. Use **Skip animation** to finish a long voyage immediately. The device's reduced-motion setting removes the movement while preserving the cargo and outcome readout.
+The game board is a fictional coast chart. Its translucent coastline and islands vary by match seed, while the twelve numbered ports and their route stay fixed. Amber ships mark ports 1–6 and teal ships mark ports 7–12. Tap a glowing port to preview its landing, score, capture, charter progress, and extra voyage. Tap it again or use **Sail** to commit. A coloured ship then visits each stop in wind order as the port counts change. Dotted flow lines show the current wind direction, and BANK markers show where each merchant scores while that wind blows. The wind reverses every four voyages, so the harbor entry moves to the other end of each merchant's shore. Use **Skip animation** to finish a long voyage immediately. The device's reduced-motion setting removes the movement while preserving the cargo and outcome readout.
+
+## Harbor charters
+
+One public charter lasts for each four-voyage wind cycle. Both fleets can earn its two-coin reward once by completing its objective before the wind turns. The objectives rotate in a fixed sequence determined by the match seed:
+
+| Charter | Objective |
+| --- | --- |
+| Harbor tribute | Bank two crates. |
+| Spice passage | Finish a voyage at your own spice market. |
+| Coast watch | Capture at least three rival crates. |
+
+The charter panel shows each fleet's progress and the number of voyages remaining. A charter's reward is paid as soon as its goal is reached. The voyage preview includes the expected charter progress. Wind changes introduce the next charter in the log, and the result records how many charters the winning fleet fulfilled.
 
 ## Orders and influence
 
