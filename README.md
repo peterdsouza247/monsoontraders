@@ -8,6 +8,8 @@ Open `index.html` in a browser, or upload the ZIP as an HTML5 game to itch.io wi
 
 For local two-player, create two profiles first. The game announces each merchant's turn before handing off the device. There is no hidden information in this game.
 
+The game board is a fictional coast chart. Amber ships mark ports 1–6 and teal ships mark ports 7–12. Tap a glowing port to launch its cargo. A coloured ship then visits each stop in wind order as the port counts change. Dotted flow lines show the current wind direction, and BANK markers show where each merchant scores while that wind blows. The wind reverses every four voyages, so the harbor entry moves to the other end of each merchant's shore. Use **Skip animation** to finish a long voyage immediately. The device's reduced-motion setting removes the movement while preserving the cargo and outcome readout.
+
 ## Saves and scope
 
 Profiles and the last 30 completed matches per profile are kept in browser local storage. Profiles can be exported as JSON and imported on another device; importing replaces this game's current profiles. A match in progress is not saved across refreshes. There is no remote matchmaking, account, or server.
